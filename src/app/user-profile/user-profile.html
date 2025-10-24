@@ -1,0 +1,113 @@
+<div class="profile-container">
+  <!-- Header -->
+  <header class="profile-header">
+    <div class="header-content">
+      <div class="header-title">
+        <h1>👤 {{ 'profile.title' | translate }}</h1>
+        <p>{{ 'profile.manage_info' | translate }}</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn-back" (click)="goBack()">← Retour</button>
+        <button class="btn-logout" (click)="logout()">Se déconnecter</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="profile-content">
+    <!-- Profile Information -->
+    <section class="profile-section">
+      <div class="section-header">
+        <h2>{{ 'profile.personal_info' | translate }}</h2>
+        <button class="btn-edit" (click)="toggleEdit()" *ngIf="!isEditing">
+          ✏️ {{ 'profile.edit' | translate }}
+        </button>
+      </div>
+
+      <div class="profile-card">
+        <div class="profile-avatar">
+          <img *ngIf="profilePhoto" [src]="profilePhoto" alt="Photo de profil" class="profile-photo">
+          <span *ngIf="!profilePhoto">{{ (currentUser?.name || 'U')[0].toUpperCase() }}</span>
+          <div class="photo-upload-overlay" *ngIf="isEditing">
+            <input type="file" id="photoInput" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
+            <label for="photoInput" class="photo-upload-btn">📷 {{ 'profile.change_photo' | translate }}</label>
+            <button *ngIf="profilePhoto" type="button" class="photo-remove-btn" (click)="removePhoto()">🗑️ {{ 'profile.remove_photo' | translate }}</button>
+          </div>
+        </div>
+
+        <form *ngIf="isEditing" (ngSubmit)="saveProfile()" class="profile-form">
+          <div class="form-group">
+            <label>{{ 'profile.name' | translate }}:</label>
+            <input type="text" [(ngModel)]="profileForm.name" name="name" required>
+          </div>
+
+          <div class="form-group">
+            <label>{{ 'profile.email' | translate }}:</label>
+            <input type="email" [(ngModel)]="profileForm.email" name="email" required>
+          </div>
+
+          <div class="form-actions">
+            <button *ngIf="selectedFile" type="button" class="btn-photo" (click)="uploadPhoto()" [disabled]="isLoading">
+              📤 {{ 'profile.upload_photo' | translate }}
+            </button>
+            <button type="submit" class="btn-primary" [disabled]="isLoading">
+              <span *ngIf="!isLoading">💾 {{ 'profile.save' | translate }}</span>
+              <span *ngIf="isLoading">⏳ {{ 'profile.saving' | translate }}...</span>
+            </button>
+            <button type="button" class="btn-secondary" (click)="toggleEdit()">
+              ❌ {{ 'profile.cancel' | translate }}
+            </button>
+          </div>
+        </form>
+
+        <div *ngIf="!isEditing" class="profile-info">
+          <div class="info-item">
+            <label>{{ 'profile.name' | translate }}:</label>
+            <span>{{ currentUser?.name }}</span>
+          </div>
+          <div class="info-item">
+            <label>{{ 'profile.email' | translate }}:</label>
+            <span>{{ currentUser?.email }}</span>
+          </div>
+          <div class="info-item">
+            <label>{{ 'profile.role' | translate }}:</label>
+            <span class="role-badge">{{ currentUser?.role === 'admin' ? ('profile.admin' | translate) : ('profile.user' | translate) }}</span>
+          </div>
+          <div class="info-item">
+            <label>{{ 'profile.last_login' | translate }}:</label>
+            <span>{{ currentDate.toLocaleDateString(currentLanguage === 'fr' ? 'fr-FR' : 'en-US') }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Password Change -->
+    <section class="profile-section">
+      <h2>{{ 'profile.change_password' | translate }}</h2>
+      <div class="profile-card">
+        <form (ngSubmit)="changePassword()" class="password-form">
+          <div class="form-group">
+            <label>{{ 'profile.current_password' | translate }}:</label>
+            <input type="password" [(ngModel)]="profileForm.currentPassword" name="currentPassword" required>
+          </div>
+
+          <div class="form-group">
+            <label>{{ 'profile.new_password' | translate }}:</label>
+            <input type="password" [(ngModel)]="profileForm.newPassword" name="newPassword" required minlength="6">
+          </div>
+
+          <div class="form-group">
+            <label>{{ 'profile.confirm_password' | translate }}:</label>
+            <input type="password" [(ngModel)]="profileForm.confirmPassword" name="confirmPassword" required>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" [disabled]="isLoading">
+              🔒 {{ 'profile.change_password' | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </div>
+</div>

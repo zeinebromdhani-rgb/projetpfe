@@ -1,0 +1,40 @@
+<div class="metabase-dashboard-container">
+  <!-- En-tête du dashboard -->
+  <div class="dashboard-header" *ngIf="showHeader">
+    <h3>{{ dashboard?.name }}</h3>
+    <p *ngIf="dashboard?.description">{{ dashboard?.description }}</p>
+  </div>
+
+  <!-- Actions utilisateur -->
+  <div class="dashboard-actions">
+    <button class="btn-action" (click)="refreshDashboard()" [disabled]="isLoading">
+      🔄 Actualiser
+    </button>
+
+    <button class="btn-action" (click)="toggleFullscreen()">
+      {{ isFullscreen ? '⤴️ Quitter' : '⤢ Plein écran' }}
+    </button>
+  </div>
+
+  <!-- Contenu du dashboard -->
+  <div class="dashboard-content" [class.fullscreen]="isFullscreen">
+    <div *ngIf="isLoading" class="loading-overlay">
+      Chargement...
+    </div>
+
+    <!-- Iframe sécurisé -->
+    <iframe
+      *ngIf="dashboard?.embedUrl"
+      [src]="safeEmbedUrl"
+      width="100%"
+      [style.height]="height"
+      frameborder="0"
+      allowfullscreen
+    ></iframe>
+
+    <!-- Message d'erreur -->
+    <div *ngIf="!dashboard?.embedUrl && !isLoading" class="error">
+      Erreur de chargement du tableau de bord.
+    </div>
+  </div>
+</div>

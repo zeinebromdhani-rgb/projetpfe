@@ -1,0 +1,24 @@
+<router-outlet></router-outlet>
+
+<!-- Settings Panel -->
+<div class="settings-panel">
+  <!-- Language Selector -->
+  <div class="setting-item">
+    <select
+      class="language-select"
+      [value]="currentLanguage"
+      (change)="setLanguage($any($event.target).value)">
+      <option *ngFor="let lang of availableLanguages" [value]="lang.code">
+        {{ lang.name }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Theme Toggle Button -->
+  <button
+    class="theme-toggle"
+    (click)="toggleTheme()"
+    [title]="currentTheme === 'light' ? 'settings.dark' : 'settings.light' | translate">
+    {{ getThemeIcon() }}
+  </button>
+</div>

@@ -1,0 +1,77 @@
+<div class="user-welcome-container" *ngIf="currentUser">
+  <!-- Header -->
+  <header class="welcome-header">
+    <div class="header-content">
+      <div class="user-greeting">
+        <h1>👋 {{ 'dashboard.welcome' | translate }}, {{ currentUser.name }} !</h1>
+        <p>{{ 'dashboard.welcome_desc' | translate }}</p>
+      </div>
+      <div class="user-actions">
+        <button class="logout-btn" (click)="logout()">{{ 'auth.logout' | translate }}</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Quick Stats -->
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-content">
+          <h3>{{ userStats.totalDashboards }}</h3>
+          <p>{{ 'stats.dashboards' | translate }}</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-content">
+          <h3>{{ userStats.lastLogin }}</h3>
+          <p>{{ 'stats.last_login' | translate }}</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-content">
+          <h3>{{ userStats.accountStatus }}</h3>
+          <p>{{ 'stats.account_status' | translate }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Actions -->
+  <section class="actions-section">
+    <div class="action-card">
+      <h2>{{ 'actions.quick_access' | translate }}</h2>
+      <div class="actions-grid">
+        <button class="action-btn primary" (click)="goToDashboard()">
+          <div class="action-icon">📈</div>
+          <div class="action-title">{{ 'actions.my_dashboards' | translate }}</div>
+          <div class="action-desc">{{ 'actions.my_dashboards_desc' | translate }}</div>
+        </button>
+        <button class="action-btn secondary" (click)="goToProfile()">
+          <div class="action-icon">👤</div>
+          <div class="action-title">{{ 'actions.my_profile' | translate }}</div>
+          <div class="action-desc">{{ 'actions.my_profile_desc' | translate }}</div>
+        </button>
+        <button class="action-btn warning" (click)="goToVisualization()">
+          <div class="action-icon">🤖</div>
+          <div class="action-title">{{ 'actions.ai_assistant' | translate }}</div>
+          <div class="action-desc">{{ 'actions.ai_assistant_desc' | translate }}</div>
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Fallback for non-logged-in users -->
+<div class="guest-welcome" *ngIf="!currentUser">
+  <div class="guest-content">
+    <h1>🔐 {{ 'auth.user_access' | translate }}</h1>
+    <p>{{ 'auth.login_prompt' | translate }}</p>
+    <div class="guest-actions">
+      <button class="btn-primary" (click)="goToLogin()">{{ 'auth.login' | translate }}</button>
+      <button class="btn-secondary" (click)="goToRegister()">{{ 'auth.register' | translate }}</button>
+    </div>
+  </div>
+</div>

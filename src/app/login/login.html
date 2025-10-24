@@ -1,0 +1,113 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>{{ 'login.title' | translate }}</h2>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">{{ 'login.email' | translate }} *</label>
+        <div class="input-container">
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            [placeholder]="'login.email_placeholder' | translate"
+            [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+            [class.success]="loginForm.get('email')?.valid && loginForm.get('email')?.touched"
+            (input)="onEmailInput()"
+            autocomplete="email"
+            maxlength="254"
+          />
+          <span class="input-icon">📧</span>
+        </div>
+        <div class="error-message" *ngIf="getErrorMessage('email')">
+          {{ getErrorMessage('email') }}
+        </div>
+        <div class="success-message" *ngIf="loginForm.get('email')?.valid && loginForm.get('email')?.touched">
+          ✓ {{ 'login.email_valid' | translate }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">{{ 'login.password' | translate }} *</label>
+        <div class="input-container">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            formControlName="password"
+            [placeholder]="'login.password_placeholder' | translate"
+            [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+            [class.success]="loginForm.get('password')?.valid && loginForm.get('password')?.touched"
+            autocomplete="current-password"
+            maxlength="128"
+          />
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="togglePasswordVisibility()"
+            [title]="(showPassword ? 'login.hide_password' : 'login.show_password') | translate">
+            {{ showPassword ? '🙈' : '👁️' }}
+          </button>
+        </div>
+        <div class="error-message" *ngIf="getErrorMessage('password')">
+          {{ getErrorMessage('password') }}
+        </div>
+        <div class="success-message" *ngIf="loginForm.get('password')?.valid && loginForm.get('password')?.touched">
+          ✓ {{ 'login.password_valid' | translate }}
+        </div>
+      </div>
+
+      <!-- Indicateur de tentatives -->
+      <div class="attempts-indicator" *ngIf="loginAttempts > 0 && !isBlocked">
+        <div class="attempts-bar">
+          <div class="attempts-progress" [style.width.%]="(loginAttempts / maxLoginAttempts) * 100"></div>
+        </div>
+        <p class="attempts-text">
+          {{ loginAttempts }}/{{ maxLoginAttempts }} {{ 'login.attempts_used' | translate }}
+        </p>
+      </div>
+
+      <!-- Indicateur de blocage -->
+      <div class="block-indicator" *ngIf="isBlocked">
+        <div class="block-message">
+          🔒 {{ 'login.account_blocked' | translate }}
+          <div class="block-timer">{{ blockTimeRemaining }} {{ 'login.seconds_remaining' | translate }}</div>
+        </div>
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="isLoading || isBlocked || loginForm.invalid"
+        class="login-btn"
+        [class.blocked]="isBlocked"
+      >
+        <span *ngIf="!isLoading && !isBlocked">{{ 'auth.login' | translate }}</span>
+        <span *ngIf="isLoading">{{ 'login.connecting' | translate }}</span>
+        <span *ngIf="isBlocked">{{ 'login.blocked' | translate }}</span>
+      </button>
+
+      <!-- Indicateur de force du formulaire -->
+      <div class="form-strength" *ngIf="!isBlocked">
+        <div class="strength-bar">
+          <div class="strength-progress"
+               [style.width.%]="getFormStrength()"
+               [class.weak]="getFormStrength() < 50"
+               [class.medium]="getFormStrength() >= 50 && getFormStrength() < 80"
+               [class.strong]="getFormStrength() >= 80">
+          </div>
+        </div>
+        <p class="strength-text">
+          {{ getFormStrength() < 50 ? ('login.form_incomplete' | translate) : getFormStrength() < 80 ? ('login.form_progress' | translate) : ('login.form_ready' | translate) }}
+        </p>
+      </div>
+    </form>
+
+    <div class="links">
+      <a [routerLink]="['/reset-password']">{{ 'login.forgot_password' | translate }}</a>
+      <p>{{ 'login.no_account' | translate }} <a [routerLink]="['/register']">{{ 'auth.register' | translate }}</a></p>
+    </div>
+  </div>
+</div>

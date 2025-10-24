@@ -1,0 +1,188 @@
+{
+  "name": "Visualisation PNL - GPT-4",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "chat-analysis",
+        "options": {},
+        "httpMethod": "POST",
+        "responseMode": "lastNode",
+        "responseData": "allEntries"
+      },
+      "id": "Webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-oss-20b"
+            },
+            {
+              "name": "messages",
+              "value": "=[{\"role\": \"user\", \"content\": \"Tu es un expert SQL. Tu vas recevoir une description de base de donn\u00e9es et une requ\u00eate en langage naturel.\\nTa mission : g\u00e9n\u00e9rer une requ\u00eate SQL SELECT s\u00e9curis\u00e9e (jamais de DELETE ou UPDATE).\\n\\nBase de donn\u00e9es : \" + $json[\"databaseDescription\"] + \"\\nQuestion utilisateur : \" + $json[\"naturalLanguageQuery\"] + \"\\n\\nRetourne uniquement la requ\u00eate SQL, sans explication.\"}]"
+            },
+            {
+              "name": "temperature",
+              "value": "0.3"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "GroqAPI",
+      "name": "LLM - Groq GPT-OSS-20b",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const sql = $json[\"choices\"]?.[0]?.text || '';\nif (!sql.toLowerCase().startsWith(\"select\")) {\n  throw new Error(\"Requ\u00eate SQL non s\u00e9curis\u00e9e : seule les requ\u00eates SELECT sont autoris\u00e9es.\");\n}\nreturn [{ sqlQuery: sql.trim() }];"
+      },
+      "id": "Function",
+      "name": "Nettoyage SQL",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        800,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{$json[\"sqlQuery\"]}}"
+      },
+      "id": "Database",
+      "name": "Base de donn\u00e9es",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-conn-id",
+          "name": "PostgreSQL Connexion"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "const data = $json;\nconst result = items.map(item => ({\n  x: Object.values(item.json)[0],\n  y: Object.values(item.json)[1],\n}));\nreturn [{\n  json: {\n    sqlQuery: $json[\"sqlQuery\"],\n    chartType: \"bar\",\n    xAxis: Object.keys(items[0].json)[0],\n    yAxis: Object.keys(items[0].json)[1],\n    mockData: result\n  }\n}];"
+      },
+      "id": "Transformation",
+      "name": "Transformation",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "options": {},
+        "responseMode": "lastNode",
+        "responseData": "firstEntryJson"
+      },
+      "id": "Response",
+      "name": "R\u00e9ponse",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "LLM - GPT-4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM - Groq GPT-OSS-20b": {
+      "main": [
+        [
+          {
+            "node": "Nettoyage SQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nettoyage SQL": {
+      "main": [
+        [
+          {
+            "node": "Base de donn\u00e9es",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base de donn\u00e9es": {
+      "main": [
+        [
+          {
+            "node": "Transformation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transformation": {
+      "main": [
+        [
+          {
+            "node": "R\u00e9ponse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "createdAt": "2025-10-03T11:53:05.222943",
+  "updatedAt": "2025-10-03T11:53:05.222951"
+}

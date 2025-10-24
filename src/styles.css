@@ -1,1 +1,1047 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* CSS Variables for theming */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #333333;
+  --card-bg: #f8f9fa;
+  --border-color: #e9ecef;
+  --hover-bg: #f8f9fa;
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #17a2b8;
+}
+
+/* Global styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Force theme application on all elements */
+.theme-dark,
+.theme-light {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Universal dark theme - EVERYTHING becomes dark */
+.theme-dark * {
+  background-color: inherit !important;
+  color: inherit !important;
+}
+
+.theme-dark body {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+}
+
+/* All content areas dark */
+.theme-dark .card,
+.theme-dark .modal-content,
+.theme-dark .stat-card,
+.theme-dark .action-card,
+.theme-dark .activity-card,
+.theme-dark .profile-card,
+.theme-dark .info-card,
+.theme-dark .quick-actions .actions-card,
+.theme-dark .user-management,
+.theme-dark .add-user-form,
+.theme-dark .users-table table {
+  background-color: #2d2d2d !important;
+  color: #ffffff !important;
+  border-color: #404040 !important;
+}
+
+/* Dark buttons */
+.theme-dark .btn {
+  background-color: #404040 !important;
+  color: #ffffff !important;
+  border-color: #404040 !important;
+}
+
+.theme-dark .btn:hover {
+  background-color: #505050 !important;
+}
+
+.theme-dark .btn-primary {
+  background-color: #4a9eff !important;
+  color: white !important;
+  border-color: #4a9eff !important;
+}
+
+.theme-dark .btn-secondary {
+  background-color: #adb5bd !important;
+  color: white !important;
+  border-color: #adb5bd !important;
+}
+
+/* Dark form elements */
+.theme-dark input,
+.theme-dark select,
+.theme-dark textarea,
+.theme-dark .form-control {
+  background-color: #2d2d2d !important;
+  color: #ffffff !important;
+  border: 1px solid #404040 !important;
+}
+
+.theme-dark input:focus,
+.theme-dark select:focus,
+.theme-dark textarea:focus,
+.theme-dark .form-control:focus {
+  background-color: #2d2d2d !important;
+  border-color: #4a9eff !important;
+  color: #ffffff !important;
+}
+
+/* Dark tables */
+.theme-dark .table,
+.theme-dark .users-table table {
+  background-color: #2d2d2d !important;
+  color: #ffffff !important;
+}
+
+.theme-dark .users-table th,
+.theme-dark .users-table td {
+  background-color: #2d2d2d !important;
+  color: #ffffff !important;
+  border-color: #404040 !important;
+}
+
+.theme-dark .users-table th {
+  background-color: #404040 !important;
+}
+
+/* Dark text and headings */
+.theme-dark h1,
+.theme-dark h2,
+.theme-dark h3,
+.theme-dark h4,
+.theme-dark h5,
+.theme-dark h6 {
+  color: #ffffff !important;
+}
+
+.theme-dark p,
+.theme-dark span,
+.theme-dark div {
+  color: #ffffff !important;
+}
+
+/* Dark links */
+.theme-dark a {
+  color: #4a9eff !important;
+}
+
+.theme-dark a:hover {
+  color: #6bb3ff !important;
+}
+
+/* Component overrides for theming */
+.theme-dark .user-welcome-container {
+  background: linear-gradient(135deg, #2d1b69 0%, #11998e 100%);
+}
+
+.theme-dark .welcome-header {
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.theme-dark .user-greeting h1 {
+  color: var(--text-color);
+}
+
+.theme-dark .user-greeting p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.theme-dark .stat-card {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+.theme-dark .stat-content h3 {
+  color: var(--text-color);
+}
+
+.theme-dark .stat-content p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.theme-dark .action-card {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+.theme-dark .action-card h2 {
+  color: var(--text-color);
+}
+
+.theme-dark .action-btn {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.theme-dark .activity-card {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+.theme-dark .activity-card h2 {
+  color: var(--text-color);
+}
+
+.theme-dark .activity-item {
+  background: var(--hover-bg);
+  color: var(--text-color);
+}
+
+.theme-dark .activity-title {
+  color: var(--text-color);
+}
+
+.theme-dark .activity-time {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Admin Welcome Page Dark Theme */
+.theme-dark .admin-container {
+  background: linear-gradient(135deg, #2d1b69 0%, #11998e 100%);
+}
+
+.theme-dark .admin-header {
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.theme-dark .admin-header h1 {
+  color: var(--text-color);
+}
+
+.theme-dark .user-info {
+  color: var(--text-color);
+}
+
+.theme-dark .stat-card {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+.theme-dark .stat-content h3 {
+  color: var(--text-color);
+}
+
+.theme-dark .stat-content p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.theme-dark .actions-section h2 {
+  color: var(--text-color);
+}
+
+.theme-dark .user-management {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+.theme-dark .user-management h2 {
+  color: var(--text-color);
+}
+
+.theme-dark .add-user-form {
+  background: var(--hover-bg);
+  color: var(--text-color);
+}
+
+.theme-dark .add-user-form h3 {
+  color: var(--text-color);
+}
+
+.theme-dark .form-group label {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.theme-dark .users-table table {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+.theme-dark .users-table th {
+  background: var(--hover-bg);
+  color: var(--text-color);
+}
+
+.theme-dark .users-table tr:hover {
+  background: var(--hover-bg);
+}
+
+/* User Dashboard Dark Theme */
+.theme-dark .dashboard-container {
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+.theme-dark .dashboard-header {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.theme-dark .dashboard-header h1 {
+  color: var(--text-color);
+}
+
+.theme-dark .profile-card {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+.theme-dark .info-card {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+.theme-dark .metabase-section {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+.theme-dark .metabase-header h2 {
+  color: var(--text-color);
+}
+
+.theme-dark .quick-actions .actions-card {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+.theme-dark .activity-card {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+/* Login Page Dark Theme */
+.theme-dark .login-container {
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+.theme-dark .login-card {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+.theme-dark .login-card h2 {
+  color: var(--text-color);
+}
+
+/* Landing Page Dark Theme */
+.theme-dark .landing-container {
+  background: var(--bg-color) !important;
+  color: var(--text-color) !important;
+}
+
+.theme-dark .hero {
+  background: linear-gradient(135deg, #2d1b69 0%, #11998e 100%) !important;
+}
+
+.theme-dark .features {
+  background: var(--bg-color) !important;
+  color: var(--text-color) !important;
+}
+
+.theme-dark .feature-card {
+  background: var(--card-bg) !important;
+  color: var(--text-color) !important;
+}
+
+.theme-dark .feature-title {
+  color: var(--text-color) !important;
+}
+
+.theme-dark .feature-description {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.theme-dark .features-title {
+  color: var(--text-color) !important;
+}
+
+.theme-dark .cta-section {
+  background: linear-gradient(135deg, #2d1b69 0%, #11998e 100%) !important;
+}
+
+.theme-dark .footer {
+  background: var(--hover-bg) !important;
+  color: var(--text-color) !important;
+}
+
+.theme-dark .footer-link {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.theme-dark .footer-link:hover {
+  color: var(--text-color) !important;
+}
+
+/* ===== USER PROFILE DARK THEME - SPÉCIFIQUE ===== */
+
+/* Profile Container */
+.theme-dark .profile-container {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+  min-height: 100vh;
+  color: var(--text-color) !important;
+}
+
+/* Profile Header */
+.theme-dark .profile-header {
+  background: linear-gradient(135deg, #4a4a4a 0%, #5a5a5a 100%) !important;
+  color: #ffffff !important;
+}
+
+.theme-dark .header-content {
+  color: #ffffff !important;
+}
+
+.theme-dark .header-title h1 {
+  color: #ffffff !important;
+}
+
+.theme-dark .header-title p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Header Buttons */
+.theme-dark .btn-back {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.theme-dark .btn-back:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+}
+
+.theme-dark .btn-logout {
+  background: rgba(220, 53, 69, 0.8) !important;
+  color: white !important;
+}
+
+.theme-dark .btn-logout:hover {
+  background: rgba(220, 53, 69, 1) !important;
+}
+
+/* Profile Content */
+.theme-dark .profile-content {
+  background: transparent !important;
+}
+
+/* Section Headers */
+.theme-dark .section-header h2 {
+  color: var(--text-color) !important;
+}
+
+.theme-dark .btn-edit {
+  background: linear-gradient(135deg, #28a745, #20c997) !important;
+  color: white !important;
+}
+
+.theme-dark .btn-edit:hover {
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3) !important;
+}
+
+/* Profile Card */
+.theme-dark .profile-card {
+  background: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Profile Avatar */
+.theme-dark .profile-avatar {
+  background: linear-gradient(135deg, #4a4a4a, #5a5a5a) !important;
+  color: white !important;
+}
+
+.theme-dark .photo-upload-overlay {
+  background: rgba(0, 0, 0, 0.8) !important;
+}
+
+.theme-dark .photo-upload-btn {
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: #333 !important;
+}
+
+.theme-dark .photo-upload-btn:hover {
+  background: white !important;
+}
+
+.theme-dark .photo-remove-btn {
+  background: rgba(220, 53, 69, 0.9) !important;
+  color: white !important;
+}
+
+.theme-dark .photo-remove-btn:hover {
+  background: #dc3545 !important;
+}
+
+.theme-dark .btn-photo {
+  background: linear-gradient(135deg, #28a745, #20c997) !important;
+  color: white !important;
+}
+
+.theme-dark .btn-photo:hover:not(:disabled) {
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3) !important;
+}
+
+/* Profile Info Items */
+.theme-dark .info-item {
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.theme-dark .info-item label {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.theme-dark .info-item span {
+  color: var(--text-color) !important;
+}
+
+.theme-dark .role-badge {
+  background: linear-gradient(135deg, #FF9800, #F57C00) !important;
+  color: white !important;
+}
+
+/* Form Elements */
+.theme-dark .form-group label {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.theme-dark .form-group input,
+.theme-dark .form-group select {
+  background: var(--card-bg) !important;
+  border: 2px solid var(--border-color) !important;
+  color: var(--text-color) !important;
+}
+
+.theme-dark .form-group input:focus,
+.theme-dark .form-group select:focus {
+  border-color: #4a9eff !important;
+  background: var(--card-bg) !important;
+  color: var(--text-color) !important;
+}
+
+.theme-dark .form-group input::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Form Buttons */
+.theme-dark .btn-primary {
+  background: linear-gradient(135deg, #4a9eff, #6bb3ff) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.theme-dark .btn-primary:hover:not(:disabled) {
+  box-shadow: 0 4px 15px rgba(74, 158, 255, 0.3) !important;
+}
+
+.theme-dark .btn-primary:disabled {
+  opacity: 0.6 !important;
+  background: linear-gradient(135deg, #4a9eff, #6bb3ff) !important;
+}
+
+.theme-dark .btn-secondary {
+  background: var(--secondary-color) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.theme-dark .btn-secondary:hover {
+  background: #5a6268 !important;
+}
+
+/* Settings */
+.theme-dark .setting-group h3 {
+  color: var(--text-color) !important;
+}
+
+.theme-dark .checkbox-label {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.theme-dark .checkbox-label input[type="checkbox"] {
+  accent-color: #4a9eff !important;
+}
+
+/* Select Options */
+.theme-dark select option {
+  background: var(--card-bg) !important;
+  color: var(--text-color) !important;
+}
+
+/* Modal Dark Theme */
+.theme-dark .modal-backdrop {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.theme-dark .export-modal {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+.theme-dark .modal-header {
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+.theme-dark .modal-body {
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+/* Form Elements Dark Theme */
+.theme-dark input,
+.theme-dark select,
+.theme-dark textarea,
+.theme-dark .form-control {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-color) !important;
+  box-shadow: none !important;
+}
+
+.theme-dark input:focus,
+.theme-dark select:focus,
+.theme-dark textarea:focus,
+.theme-dark .form-control:focus {
+  background: var(--card-bg) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--text-color) !important;
+  box-shadow: 0 0 0 0.2rem rgba(74, 158, 255, 0.25) !important;
+  outline: none !important;
+}
+
+.theme-dark input::placeholder,
+.theme-dark textarea::placeholder,
+.theme-dark .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.theme-dark option {
+  background: var(--card-bg) !important;
+  color: var(--text-color) !important;
+}
+
+/* Text areas specifically */
+.theme-dark textarea {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-color) !important;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.theme-dark textarea:focus {
+  background: var(--card-bg) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Button Overrides for Dark Theme */
+.theme-dark .btn-primary {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.theme-dark .btn-secondary {
+  background: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+/* Link Colors */
+.theme-dark a {
+  color: var(--primary-color);
+}
+
+.theme-dark a:hover {
+  color: lighten(var(--primary-color), 10%);
+}
+
+.theme-dark {
+  --bg-color: #1a1a1a;
+  --text-color: #ffffff;
+  --card-bg: #2d2d2d;
+  --border-color: #404040;
+  --hover-bg: #404040;
+  --primary-color: #4a9eff;
+  --secondary-color: #adb5bd;
+}
+
+.theme-light {
+  --bg-color: #ffffff;
+  --text-color: #333333;
+  --card-bg: #f8f9fa;
+  --border-color: #e9ecef;
+  --hover-bg: #f8f9fa;
+  --primary-color: #007bff;
+  --secondary-color: #6c757d;
+}
+
+/* Button styles - Modern color palette */
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  border: none;
+  color: white;
+  box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, #e86dd5 0%, #e74c62 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(240, 147, 251, 0.6);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  border: none;
+  color: white;
+  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, #3d9cfb 0%, #00e8fa 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 172, 254, 0.6);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  border: none;
+  color: white;
+  box-shadow: 0 4px 15px rgba(250, 112, 154, 0.4);
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, #f85f88 0%, #fdd63a 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(250, 112, 154, 0.6);
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  border: none;
+  color: #333;
+  box-shadow: 0 4px 15px rgba(168, 237, 234, 0.4);
+}
+
+.btn-warning:hover {
+  background: linear-gradient(135deg, #96e6e2 0%, #fbbcd9 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(168, 237, 234, 0.6);
+}
+
+.btn-info {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  border: none;
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 154, 158, 0.4);
+}
+
+.btn-info:hover {
+  background: linear-gradient(135deg, #ff868a 0%, #fdbbe5 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 154, 158, 0.6);
+}
+
+/* Card styles */
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Form styles */
+.form-control {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+.form-control:focus {
+  background-color: var(--card-bg);
+  border-color: var(--primary-color);
+  color: var(--text-color);
+}
+
+/* Modal styles */
+.modal-content {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+/* Table styles */
+.table {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.table th,
+.table td {
+  border-color: var(--border-color);
+}
+
+/* Settings Panel */
+.settings-panel {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.setting-item {
+  display: flex;
+  align-items: center;
+}
+
+.language-select {
+  background: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 100px;
+}
+
+.language-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb, 0, 123, 255), 0.25);
+}
+
+.language-select:hover {
+  border-color: var(--primary-color);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* User Profile Styles - BASE STYLES (keeping original styles) */
+.profile-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header */
+.profile-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-title h1 {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+.header-title p {
+  margin: 0.5rem 0 0 0;
+  opacity: 0.9;
+  font-size: 1.1rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-back,
+.btn-logout {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.btn-back {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-back:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-logout {
+  background: rgba(255, 87, 34, 0.8);
+  color: white;
+}
+
+.btn-logout:hover {
+  background: rgba(255, 87, 34, 1);
+  transform: translateY(-2px);
+}
+
+/* Profile Content */
+.profile-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Profile Sections */
+.profile-section {
+  margin-bottom: 2rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.section-header h2 {
+  color: #333;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.btn-edit {
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.btn-edit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+/* Profile Card */
+.profile-card {
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.photo-upload-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 50%;
+}
+
+.profile-avatar:hover .photo-upload-overlay {
+  opacity: 1
+}

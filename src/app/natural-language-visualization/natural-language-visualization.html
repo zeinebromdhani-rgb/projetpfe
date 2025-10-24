@@ -1,0 +1,93 @@
+<div class="chat-container">
+  <div class="back-button-container">
+    <button class="back-btn" (click)="goBack()">
+      ← {{ 'common.back' | translate }}
+    </button>
+  </div>
+  <div class="chat-header">
+    <h2>🤖 AI Visualization Assistant</h2>
+    <p>An intelligent chat to create visualizations from your database</p>
+  </div>
+
+  <div class="chat-messages" #chatMessages>
+    <div *ngFor="let message of messages" class="message" [ngClass]="message.sender">
+      <div class="message-content">
+        <!-- table -->
+        <div *ngIf="message.type === 'table'" class="table-message">
+          <h4 *ngIf="message.title">📋 {{ message.title }}</h4>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th *ngFor="let c of message.columns">{{ c }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of message.rows">
+                  <td *ngFor="let cell of row">{{ cell }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div *ngIf="message.type === 'text'" class="text-message">
+          {{ message.content }}
+        </div>
+        <div *ngIf="message.type === 'visualization'" class="visualization-message">
+          <h4>📊 {{ message.title }}</h4>
+          <div class="chart-details">
+            <div class="detail-item"><strong>Type:</strong> {{ message.chartType }}</div>
+            <div class="detail-item"><strong>SQL:</strong>
+              <pre>{{ message.sqlQuery }}</pre>
+            </div>
+          </div>
+
+          <!-- Metabase Embed (if available) -->
+          <div *ngIf="message.metabaseEmbedUrl" class="metabase-embed">
+            <iframe [src]="message.metabaseEmbedUrl | safeUrl" width="100%" height="400" frameborder="0"
+              allowfullscreen>
+            </iframe>
+            <div class="embed-links">
+              <a [href]="message.metabaseQuestionUrl" target="_blank" class="embed-link">
+                🔗 Ouvrir dans Metabase
+              </a>
+            </div>
+          </div>
+
+          <!-- Fallback to mock chart -->
+          <div *ngIf="!message.metabaseEmbedUrl" class="chart-placeholder" [ngClass]="message.chartType">
+            <div class="data-points">
+              <div *ngFor="let point of message.mockData" class="data-point">
+                {{ point['x'] }}: {{ point['y'] }}
+              </div>
+            </div>
+            <div class="metabase-notice">
+              <small>💡 Metabase non disponible - affichage des données mockées</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="isLoading" class="message bot typing">
+      <div class="message-content">
+        <div class="typing-indicator">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input">
+    <input type="text" [(ngModel)]="currentMessage" (keyup.enter)="sendMessage()" placeholder="Tapez votre message..."
+      [disabled]="isLoading" class="message-input">
+    <button (click)="sendMessage()" [disabled]="isLoading || !currentMessage.trim()" class="send-btn">
+      📤
+    </button>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    ❌ {{ error }}
+  </div>
+</div>

@@ -1,0 +1,199 @@
+<div class="register-container">
+  <div class="register-card">
+    <h2>Créer un compte</h2>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name">Nom complet *</label>
+        <div class="input-container">
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            placeholder="Jean Dupont"
+            [class.error]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched"
+            [class.success]="registerForm.get('name')?.valid && registerForm.get('name')?.touched"
+            (input)="onNameInput()"
+            autocomplete="name"
+            maxlength="50"
+          />
+          <span class="input-icon">👤</span>
+        </div>
+        <div class="error-message" *ngIf="getErrorMessage('name')">
+          {{ getErrorMessage('name') }}
+        </div>
+        <div class="success-message" *ngIf="registerForm.get('name')?.valid && registerForm.get('name')?.touched">
+          ✓ Nom valide
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Adresse email *</label>
+        <div class="input-container">
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            placeholder="jean.dupont@exemple.com"
+            [class.error]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+            [class.success]="registerForm.get('email')?.valid && registerForm.get('email')?.touched"
+            (input)="onEmailInput()"
+            autocomplete="email"
+            maxlength="254"
+          />
+          <span class="input-icon">📧</span>
+        </div>
+        <div class="error-message" *ngIf="getErrorMessage('email')">
+          {{ getErrorMessage('email') }}
+        </div>
+        <div class="success-message" *ngIf="registerForm.get('email')?.valid && registerForm.get('email')?.touched">
+          ✓ Email valide
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe *</label>
+        <div class="input-container">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            formControlName="password"
+            placeholder="Créez un mot de passe fort"
+            [class.error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+            [class.success]="registerForm.get('password')?.valid && registerForm.get('password')?.touched"
+            autocomplete="new-password"
+            maxlength="128"
+          />
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="togglePasswordVisibility()"
+            [title]="showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'">
+            {{ showPassword ? '🙈' : '👁️' }}
+          </button>
+        </div>
+
+        <!-- Indicateur de force du mot de passe -->
+        <div class="password-strength" *ngIf="registerForm.get('password')?.value">
+          <div class="strength-bar">
+            <div class="strength-progress"
+                 [style.width.%]="passwordStrength"
+                 [style.background-color]="getPasswordStrengthColor()">
+            </div>
+          </div>
+          <div class="strength-info">
+            <span class="strength-text" [style.color]="getPasswordStrengthColor()">
+              {{ getPasswordStrengthText() }} ({{ passwordStrength }}%)
+            </span>
+          </div>
+        </div>
+
+        <div class="error-message" *ngIf="getErrorMessage('password')">
+          {{ getErrorMessage('password') }}
+        </div>
+        <div class="success-message" *ngIf="registerForm.get('password')?.valid && registerForm.get('password')?.touched">
+          ✓ Mot de passe fort
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirmer le mot de passe *</label>
+        <div class="input-container">
+          <input
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            placeholder="Confirmez votre mot de passe"
+            [class.error]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched"
+            [class.success]="registerForm.get('confirmPassword')?.valid && registerForm.get('confirmPassword')?.touched"
+            autocomplete="new-password"
+            maxlength="128"
+          />
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="toggleConfirmPasswordVisibility()"
+            [title]="showConfirmPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'">
+            {{ showConfirmPassword ? '🙈' : '👁️' }}
+          </button>
+        </div>
+        <div class="error-message" *ngIf="getErrorMessage('confirmPassword')">
+          {{ getErrorMessage('confirmPassword') }}
+        </div>
+        <div class="success-message" *ngIf="registerForm.get('confirmPassword')?.valid && registerForm.get('confirmPassword')?.touched">
+          ✓ Mots de passe identiques
+        </div>
+      </div>
+
+      <!-- Conditions d'utilisation -->
+      <div class="form-group">
+        <div class="checkbox-container">
+          <input
+            type="checkbox"
+            id="acceptTerms"
+            formControlName="acceptTerms"
+            [(ngModel)]="acceptTerms"
+          />
+          <label for="acceptTerms" class="checkbox-label">
+            J'accepte les <a href="#" target="_blank">conditions d'utilisation</a> et la
+            <a href="#" target="_blank">politique de confidentialité</a> *
+          </label>
+        </div>
+        <div class="error-message" *ngIf="!acceptTerms && registerForm.get('acceptTerms')?.touched">
+          Vous devez accepter les conditions d'utilisation
+        </div>
+      </div>
+
+      <div class="success-message" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Indicateur de progression du formulaire -->
+      <div class="form-progress">
+        <div class="progress-bar">
+          <div class="progress-fill"
+               [style.width.%]="getFormStrength()"
+               [class.weak]="getFormStrength() < 50"
+               [class.medium]="getFormStrength() >= 50 && getFormStrength() < 80"
+               [class.strong]="getFormStrength() >= 80">
+          </div>
+        </div>
+        <p class="progress-text">
+          Formulaire complété à {{ getFormStrength() }}%
+        </p>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="isLoading || !acceptTerms || registerForm.invalid || passwordStrength < 50"
+        class="register-btn"
+        [class.ready]="registerForm.valid && acceptTerms && passwordStrength >= 50"
+      >
+        <span *ngIf="!isLoading && registerForm.valid && acceptTerms && passwordStrength >= 50">
+          🚀 Créer mon compte
+        </span>
+        <span *ngIf="!isLoading && (!registerForm.valid || !acceptTerms || passwordStrength < 50)">
+          Complétez le formulaire
+        </span>
+        <span *ngIf="isLoading">
+          <span class="loading-spinner"></span>
+          Création en cours...
+        </span>
+      </button>
+
+      <!-- Informations de sécurité -->
+      <div class="security-info">
+        <p>🔒 Vos données sont protégées et chiffrées</p>
+        <p>📧 Un email de confirmation sera envoyé</p>
+      </div>
+    </form>
+
+    <div class="links">
+      <p>Vous avez déjà un compte ? <a [routerLink]="['/login']">Se connecter</a></p>
+    </div>
+  </div>
+</div>

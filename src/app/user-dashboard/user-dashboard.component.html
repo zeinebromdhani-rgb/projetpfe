@@ -1,0 +1,128 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-title">
+        <h1>📊 {{ 'dashboard.title' | translate }}</h1>
+        <p>{{ 'dashboard.welcome_desc' | translate }}</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn-back" (click)="goBack()">← {{ 'common.back' | translate }}</button>
+        <button class="btn-logout" (click)="logout()">{{ 'auth.logout' | translate }}</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- User Profile Card -->
+  <section class="profile-section">
+    <div class="profile-card">
+      <div class="profile-avatar">
+        <span>{{ (currentUser?.name || 'U')[0].toUpperCase() }}</span>
+      </div>
+      <div class="profile-info">
+        <h3>{{ currentUser?.name || 'Utilisateur' }}</h3>
+        <p>{{ currentUser?.email || 'user@example.com' }}</p>
+        <span class="user-badge">{{ 'users.user' | translate }}</span>
+      </div>
+      <div class="profile-stats">
+        <div class="stat-item">
+          <span class="stat-number">{{ availableDashboards.length }}</span>
+          <span class="stat-label">{{ 'stats.dashboards' | translate }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">24</span>
+          <span class="stat-label">{{ 'stats.last_login' | translate }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dashboard Info -->
+  <section class="dashboard-info" *ngIf="selectedDashboard">
+    <div class="info-card">
+      <div class="dashboard-icon-large">{{ getDashboardIcon(selectedDashboard.name) }}</div>
+      <div class="dashboard-details">
+        <h3>{{ selectedDashboard.name }}</h3>
+        <p>{{ selectedDashboard.description }}</p>
+        <div class="dashboard-meta">
+          <span class="category-badge">{{ selectedDashboard.category }}</span>
+          <span class="status-badge" [class.active]="selectedDashboard.isActive">
+            {{ selectedDashboard.isActive ? 'Actif' : 'Inactif' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Metabase Integration -->
+  <section class="metabase-section" *ngIf="selectedDashboard">
+    <div class="metabase-header">
+      <h2>{{ selectedDashboard.name }}</h2>
+      <div class="metabase-actions">
+        <button class="btn-refresh" (click)="refreshDashboard()">🔄 {{ 'common.loading' | translate }}</button>
+        <button class="btn-fullscreen" (click)="toggleFullscreen()">⛶ {{ 'dashboard.fullscreen' | translate }}</button>
+      </div>
+    </div>
+    <div class="metabase-content" [class.fullscreen]="isFullscreen">
+      <!-- Primary: Direct access to public dashboard -->
+      <div class="metabase-embed">
+        <iframe
+          src="http://localhost:3000/public/dashboard/f84bd93e-4ced-4e8d-9f89-4103eabb7946"
+          width="100%"
+          height="600"
+          frameborder="0"
+          allowtransparency="true"
+          allowfullscreen
+          (load)="onIframeLoad()"
+          (error)="onIframeError()">
+        </iframe>
+      </div>
+
+      <!-- Fallback message if iframe fails -->
+      <div class="metabase-fallback" *ngIf="metabaseError">
+        <div class="fallback-content">
+          <div class="fallback-icon">⚠️</div>
+          <h3>{{ 'dashboard.integration_unavailable' | translate }}</h3>
+          <p>{{ 'dashboard.integration_security' | translate }}</p>
+          <a href="http://localhost:3000/public/dashboard/f84bd93e-4ced-4e8d-9f89-4103eabb7946"
+             target="_blank"
+             class="btn-metabase">
+            🔗 {{ 'dashboard.open_new_tab' | translate }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Actions -->
+  <section class="quick-actions">
+    <div class="actions-card">
+      <h3>{{ 'dashboard.actions' | translate }}</h3>
+      <div class="actions-grid">
+        <button class="action-btn" (click)="exportData()">
+          <div class="action-icon">📊</div>
+          <div class="action-content">
+            <div class="action-title">{{ 'common.export' | translate }}</div>
+            <div class="action-desc">{{ 'common.export' | translate }}</div>
+          </div>
+        </button>
+        <button class="action-btn" (click)="openSettings()">
+          <div class="action-icon">⚙️</div>
+          <div class="action-content">
+            <div class="action-title">{{ 'settings.language' | translate }}</div>
+            <div class="action-desc">{{ 'settings.language' | translate }}</div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Export Modal -->
+  <app-export-modal
+    [isVisible]="showExportModal"
+    [dashboardId]="selectedDashboard?.id || null"
+    [dashboardName]="selectedDashboard?.name || ''"
+    (closeModal)="closeExportModal()">
+  </app-export-modal>
+</div>
