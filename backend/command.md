@@ -1,0 +1,1 @@
+cmd = ./mvn spring-boot:run
