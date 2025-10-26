@@ -3,59 +3,99 @@ package com.monsite.backend.service;
 import com.monsite.backend.entity.User;
 import com.monsite.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements IUserService {
 
     @Autowired
     private UserRepository userRepository;
 
-    public User createUser(User user) {
-        return userRepository.save(user);
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+  @Override
+  public User addUser(User user) {
+    return this.userRepository.save(user);
+  }
+
+
+  @Override
+  public User findByEmail(String email) {
+    return this.userRepository.findByEmail(email).orElse(null);
+  }
+
+    public Boolean findByEmailBoolean(String email) {
+        User user = this.userRepository.findByEmail(email).orElse(null);
+        return user != null;
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    User user = this.userRepository.findByEmail(username)
+      .orElseThrow(() -> new UsernameNotFoundException("User with username " + username + " not found"));
+
+    return org.springframework.security.core.userdetails.User.builder()
+      .username(user.getEmail())
+      .password(user.getPassword())
+      .roles(user.getRole())
+      .build();
+  }
+
+  public List<User> getAllUsers() {
+    return this.userRepository.findAll();
+  }
+
+    public boolean updateNameAndEmail(Long userId, String name, String email) {
+        int updated = this.userRepository.updateNameAndEmailById(userId, name, email);
+        return updated == 1;
     }
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    public boolean updatePassword(Long userId, String rawPassword) {
+
+        String hashed = passwordEncoder.encode(rawPassword);
+        int updated = this.userRepository.updatePasswordById(userId, hashed);
+        return updated == 1;
     }
 
-    public User updateUser(Long id, User updatedUser) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if (optionalUser.isPresent()) {
-            User existingUser = optionalUser.get();
-            existingUser.setName(updatedUser.getName());
-            existingUser.setEmail(updatedUser.getEmail());
-            existingUser.setRole(updatedUser.getRole());
-            existingUser.setProfilePhoto(updatedUser.getProfilePhoto());
-            return userRepository.save(existingUser);
+    public boolean updateRole(Long userId, String role) {
+        int updated = this.userRepository.updateRoleById(userId, role);
+        return updated == 1;
+    }
+
+
+    public boolean deleteUserById(Long id) {
+        if (!userRepository.existsById(id)) {
+            return false;
         }
-        return null;
-    }
-
-    public void deleteUser(Long id) {
         userRepository.deleteById(id);
+        return true;
     }
-    public List<User> getUsersByRole(String role) {
-    return userRepository.findByRole(role);
-}
 
-public Optional<User> findByEmail(String email) {
- return userRepository.findByEmail(email);
-}
+    public boolean changeOwnPassword(String email, String currentPassword, String newPassword) {
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user == null) {
+            return false;
+        }
 
-public Optional<User> findById(Long id) {
-    return userRepository.findById(id);
-}
+        // check current password matches
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            // wrong current password
+            return false;
+        }
 
-public User updateUser(User user) {
-    return userRepository.save(user);
-}
+        // encode and save new password
+        String encoded = passwordEncoder.encode(newPassword);
+        int updated = userRepository.updatePasswordById(user.getId(), encoded);
 
+        return (updated == 1);
+    }
 }

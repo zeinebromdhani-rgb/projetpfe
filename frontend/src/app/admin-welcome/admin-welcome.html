@@ -1,0 +1,124 @@
+<div class="admin-container">
+  <!-- Header -->
+  <header class="admin-header">
+    <div class="header-content">
+      <h1>🛡️ Panel Administrateur</h1>
+      <div class="user-info" *ngIf="currentUser">
+        <span>Connecté en tant que: {{ currentUser.name }}</span>
+        <button class="logout-btn" (click)="logout()">Se déconnecter</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Stats Cards -->
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-content">
+          <h3>{{ adminStats.totalUsers }}</h3>
+          <p>Utilisateurs totaux</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-content">
+          <h3>{{ adminStats.normalUsers }}</h3>
+          <p>Utilisateurs</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">👑</div>
+        <div class="stat-content">
+          <h3>{{ adminStats.adminUsers }}</h3>
+          <p>Administrateurs</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Actions -->
+  <section class="actions-section">
+    <h2>Actions Rapides</h2>
+    <div class="actions-grid">
+      <button class="action-btn secondary" (click)="toggleUserManagement()">
+        👥 Gérer les utilisateurs
+      </button>
+      <button class="action-btn info" (click)="addUser()">
+        ➕ Ajouter un utilisateur
+      </button>
+      <button class="action-btn success" (click)="openMetabaseDirect()">
+        🔗 Accéder à Metabase (Modification)
+      </button>
+    </div>
+  </section>
+
+  <!-- User Management Section -->
+  <section class="user-management" *ngIf="showUserManagement">
+    <h2>Gestion des Utilisateurs</h2>
+
+    <!-- Add User Form -->
+    <div class="add-user-form" *ngIf="showAddUserForm">
+      <h3>Ajouter un nouvel utilisateur</h3>
+      <form (ngSubmit)="saveNewUser()">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nom:</label>
+            <input type="text" [(ngModel)]="newUser.name" name="name" required>
+          </div>
+          <div class="form-group">
+            <label>Email:</label>
+            <input type="email" [(ngModel)]="newUser.email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label>Rôle:</label>
+            <select [(ngModel)]="newUser.role" name="role">
+              <option value='USER'>Utilisateur</option>
+              <option value="ADMIN">Administrateur</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Ajouter</button>
+          <button type="button" class="btn-secondary" (click)="cancelAddUser()">Annuler</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Users List -->
+    <div class="users-table">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Rôle</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <span class="role-badge" [style.background-color]="getRoleColor(user.role)">
+                {{ getRoleLabel(user.role) }}
+              </span>
+            </td>
+            <td class="actions-cell">
+              <select [value]="user.role" (change)="changeUserRole(user, $any($event.target).value)"  [disabled]="isSelf(user)">
+                <option value="USER">Utilisateur</option>
+                <option value="ADMIN">Administrateur</option>
+              </select>
+              <button class="btn-danger" (click)="deleteUser(user)" [disabled]="isSelf(user)">
+                🗑️
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

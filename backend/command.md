@@ -1,1 +1,2 @@
-cmd = ./mvn spring-boot:run
+
+powershell = .\mvnw spring-boot:run

@@ -16,8 +16,8 @@ public class SchemaController {
   private  SchemaService service;
 
   // GET /api/schema/public/tables
-  @GetMapping("/{schema}/tables")
-  public JsonNode getTables(@PathVariable String schema) {
-    return service.getTables(schema);
+  @GetMapping("/tables")
+  public JsonNode getTables() {
+    return service.getTables("public");
   }
 }

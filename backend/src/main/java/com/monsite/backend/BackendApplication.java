@@ -1,6 +1,5 @@
 package com.monsite.backend;
 
-import com.monsite.backend.entity.User;
 import com.monsite.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -19,11 +18,11 @@ public class BackendApplication implements CommandLineRunner {
 
 @Override
 public void run(String... args) {
-   
+
    /*  try {
         User user = new User();
-        user.setName("Zeineb"); 
-        user.setEmail("zeineb@example.com"); 
+        user.setName("Zeineb");
+        user.setEmail("zeineb@example.com");
         userRepository.save(user);
         System.out.println("✔ User saved!");
     } catch (Exception e) {
