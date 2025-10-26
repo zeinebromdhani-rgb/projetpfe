@@ -1,0 +1,252 @@
+{
+  "name": "PFE",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pfe/ask",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -224,
+        -432
+      ],
+      "id": "0f5dc27c-fc58-4a0a-b149-a448d5e175e6",
+      "name": "Webhook",
+      "webhookId": "b5ce91b2-8284-4b65-a087-de49ff80590a"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Webhook').item.json.body.nlq }}",
+        "options": {
+          "systemMessage": "=Tu es un assistant SQL expert. Convertis la question suivante en une requête SQL PostgreSQL valide\nbasée sur ce schéma : \n{{ $json.output }}\n\nContraintes :\n- Réponds UNIQUEMENT avec la requête SQL, sans ```sql ni explications et sans retour à la ligne\n- Utilise des noms exacts (PostgreSQL).\n- Ajoute LIMIT 100 si le résultat peut être volumineux.\n\nif you got an error from the http request node you should fix it :\n\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        352,
+        -432
+      ],
+      "id": "c9181ed2-8eb2-453c-852b-497779853d62",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "openai/gpt-oss-20b",
+          "mode": "list",
+          "cachedResultName": "openai/gpt-oss-20b"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        352,
+        -224
+      ],
+      "id": "7ecd813a-1265-4f58-9331-af6adb736901",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "drM0FwL6OGvYo5MJ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        896,
+        -432
+      ],
+      "id": "f54491d1-bda5-4a11-860f-7798daefd619",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/dataset",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Api-Key",
+              "value": "mb_SAYbUMEuu21KxTopM5x+/aDW2G+i86JwKl6PS/dBMFo="
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"database\": 2,\n  \"type\": \"native\",\n  \"native\": { \"query\": \"{{ $json.output }}\" },\n  \"parameters\": []\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        672,
+        -432
+      ],
+      "id": "8c137501-40f7-4ada-a80d-de71d0084b14",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.schema }}",
+        "options": {
+          "systemMessage": "You are a dabatabse optimization expert, you will be prompted with a schema that you should optimize: remove unnecessary noise (anything not needed to make correct sql queries to the schema)\nyou should keep the tables and their columns"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -16,
+        -432
+      ],
+      "id": "5cd610d4-b30a-48ea-a8fe-76be43bde49d",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "openai/gpt-oss-20b",
+          "mode": "list",
+          "cachedResultName": "openai/gpt-oss-20b"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -80,
+        -160
+      ],
+      "id": "db8fa56d-4d8e-4f6c-b453-d4caa5be7bd5",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "drM0FwL6OGvYo5MJ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        112,
+        -128
+      ],
+      "id": "250ddc82-cc99-4fb7-8e0a-836d6aebee42",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bMEQvJPMjARkS145",
+          "name": "OpenRouter account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6601bd07-afaa-4341-96c9-6da34c537ef5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5ee6b374b43c75969c4f32288bc6f04dbda1e51de3245f97c79b1e47470969d8"
+  },
+  "id": "ac9rNOO02iGNyHgO",
+  "tags": []
+}
